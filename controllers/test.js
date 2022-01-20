@@ -1,6 +1,7 @@
-//const { StatusCodes } = require('http-status-codes')
-//const { Actor, Movie } = require('../models')
-//const CustomApiError = require('../errors')
+/* eslint-disable semi */
+// const { StatusCodes } = require('http-status-codes')
+// const { Actor, Movie } = require('../models')
+// const CustomApiError = require('../errors')
 
 // @desc      Get actors
 // @route     GET /api/v1/actors

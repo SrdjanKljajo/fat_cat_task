@@ -1,17 +1,17 @@
 require('express-async-errors')
 const express = require('express')
-const sequelize = require('./config/db')
 const path = require('path')
 const morgan = require('morgan')
 const cors = require('cors')
+const sequelize = require('./config/db')
 
 const app = express()
 
-//Import route files
+// Import route files
 const test = require('./routes/test')
 
 // MIDDLEWARES
-//Not found middlevare
+// Not found middlevare
 const notFound = require('./middlewares/not-found-route')
 
 // Database errors middlevare
