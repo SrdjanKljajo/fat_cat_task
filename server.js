@@ -8,7 +8,8 @@ const sequelize = require('./config/db')
 const app = express()
 
 // Import route files
-const test = require('./routes/test')
+const building = require('./routes/farmBuilding')
+const unit = require('./routes/unit')
 
 // MIDDLEWARES
 // Not found middlevare
@@ -32,7 +33,8 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // import routes
-app.use('/api/v1/test', test)
+app.use('/api/v1/building', building)
+app.use('/api/v1/unit', unit)
 
 // Not found route
 app.use(notFound)
@@ -42,7 +44,7 @@ app.use(errorDbHandler)
 
 const server = async () => {
   try {
-    await sequelize.sync({ force: false })
+    await sequelize.sync()
     const port = process.env.PORT || 8000
     app.listen(port, () =>
       console.log(

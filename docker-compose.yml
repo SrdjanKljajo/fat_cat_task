@@ -6,6 +6,8 @@ services:
     image: fat_cat_task
     build: 
       context: .
+      args: 
+       NODE_ENV: development
     ports:
       - "8000:8000"
     env_file:
@@ -30,4 +32,3 @@ services:
 
 volumes:
   nps_data: {}
-
