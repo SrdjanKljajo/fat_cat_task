@@ -1,7 +1,24 @@
 const { StatusCodes } = require('http-status-codes')
-const Unit = require('../models/Unit')
 const CustomApiError = require('../errors')
-const FarmBuilding = require('../models/FarmBuilding')
+const db = require('../models')
+
+// create main Model
+const FarmBuilding = db.farm_buildings
+const Unit = db.units
+
+// @desc      Get all units
+// @route     /api/v1/building
+const getAllUnits = async (req, res) => {
+  const units = await Unit.findAll({
+    include: 'farm_buildings',
+  })
+
+  res.status(StatusCodes.OK).json({
+    status: 'success',
+    units,
+    count: units.length,
+  })
+}
 
 // @desc      Create unit
 // @route     POST /api/v1/unit
@@ -19,4 +36,4 @@ const createUnit = async (req, res) => {
   })
 }
 
-module.exports = { createUnit }
+module.exports = { createUnit, getAllUnits }

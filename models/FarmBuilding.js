@@ -1,28 +1,21 @@
-const Sequelize = require('sequelize')
-const db = require('../config/db')
-
-const FarmBuilding = db.define('farm_buildings', {
-  uuid: {
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV4,
-  },
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-  },
-})
-
-FarmBuilding.associate = models => {
-  FarmBuilding.hasMany(models.Unit, {
-    foreignKey: 'buildingId',
+module.exports = (sequelize, DataTypes) => {
+  const FarmBuilding = sequelize.define('farm_buildings', {
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Post must have a title' },
+        len: {
+          args: [2, 100],
+          msg: 'Title must have 2 - 100 caracters.',
+        },
+      },
+    },
   })
-}
 
-module.exports = FarmBuilding
+  return FarmBuilding
+}

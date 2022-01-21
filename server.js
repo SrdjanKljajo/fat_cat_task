@@ -45,6 +45,7 @@ app.use(errorDbHandler)
 const server = async () => {
   try {
     await sequelize.sync()
+    console.log('Connection has been established successfully.')
     const port = process.env.PORT || 8000
     app.listen(port, () =>
       console.log(
