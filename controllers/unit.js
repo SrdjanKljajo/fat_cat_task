@@ -26,7 +26,7 @@ const createUnit = async (req, res) => {
 }
 
 // @desc      Add health to the farm unit
-// @route     POST /api/v1/unit/:id/health
+// @route     PATCH /api/v1/unit/:id/health
 const addHealthToUnit = async (req, res) => {
   const unit = await Unit.findOne({ where: { id: req.params.id } })
   if (!unit) throw new CustomApiError.NotFoundError(`Unit not found`)

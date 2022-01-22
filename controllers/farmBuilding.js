@@ -10,8 +10,7 @@ const Unit = db.units
 // @route     GET /api/v1/building
 const getAllBuildings = async (req, res) => {
   const building = await FarmBuilding.findAndCountAll({
-    include: 'units',
-    //include: [{ model: Unit, as: 'units', attributes: ['unitName'] }],
+    include: [{ model: Unit, as: 'units', attributes: ['unitName'] }],
   })
 
   res.status(StatusCodes.OK).json({
@@ -60,7 +59,7 @@ const getFarmBuildingFarmUnit = async (req, res) => {
   const slug = req.params.slug
   const building = await FarmBuilding.findOne({
     where: { slug },
-    include: 'units',
+    include: [{ model: Unit, as: 'units', attributes: ['unitName', 'health'] }],
   })
 
   if (!building)
@@ -81,7 +80,7 @@ const getFarmBuildingFarmUnit = async (req, res) => {
   res.status(StatusCodes.OK).json({
     status: 'success',
     farmBuilding: building.buildingName,
-    unitInfo: farmBuildingFarmUnit,
+    unitHealthInfo: farmBuildingFarmUnit,
     count: `Farm building ${building.buildingName} has ${numberOfUnits} units`,
   })
 }
