@@ -6,8 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
-    name: {
+    buildingName: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
       validate: {
         notNull: { msg: 'Farm building must have a name' },
@@ -19,15 +20,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     slug: {
       type: DataTypes.STRING,
+      unique: true,
     },
-    feed: {
+    buildingFeed: {
       type: DataTypes.INTEGER,
       defaultValue: 60,
     },
   })
 
   SequelizeSlugify.slugifyModel(FarmBuilding, {
-    source: ['name'],
+    source: ['buildingName'],
     overwrite: false,
   })
 

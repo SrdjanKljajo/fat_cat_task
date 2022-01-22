@@ -10,7 +10,8 @@ const Unit = db.units
 // @route     GET /api/v1/building
 const getAllBuildings = async (req, res) => {
   const building = await FarmBuilding.findAndCountAll({
-    include: [{ model: Unit, as: 'units', attributes: ['name'] }],
+    include: 'units',
+    //include: [{ model: Unit, as: 'units', attributes: ['unitName'] }],
   })
 
   res.status(StatusCodes.OK).json({
@@ -21,19 +22,31 @@ const getAllBuildings = async (req, res) => {
 // @desc      Create building
 // @route     POST /api/v1/building
 const createBuilding = async (req, res) => {
-  const { name } = req.body
-  const building = await FarmBuilding.create({ name })
+  const { buildingName, unitName } = req.body
+
+  const building = await FarmBuilding.create({ buildingName })
+  const unit = await Unit.create({
+    unitName,
+    health: Math.floor(Math.random() * (100 - 50 + 1) + 50),
+    buildingId: building.id,
+  })
 
   const farmFeedInterval = async () => {
-    if (building.feed > 0) {
-      building.feed -= 1
+    if (building.buildingFeed > 0) {
+      building.buildingFeed -= 1
       await building.save()
     } else {
-      building.feed = 60
+      building.buildingFeed = 60
     }
   }
 
+  const unitFeedInterval = async () => {
+    unit.unitFeed += 1
+    await unit.save()
+  }
+
   setInterval(farmFeedInterval, 1000)
+  setInterval(unitFeedInterval, 10000)
 
   res.status(StatusCodes.CREATED).json({
     status: 'success',
@@ -50,21 +63,26 @@ const getFarmBuildingFarmUnit = async (req, res) => {
     include: 'units',
   })
 
-  const FarmBuildingFarmUnit = building.units
-  const NumberOfUnits = FarmBuildingFarmUnit.length
+  if (!building)
+    throw new CustomApiError.NotFoundError(
+      `Farm building ${building.buildingName} not found`
+    )
 
-  if (NumberOfUnits < 1) {
+  const farmBuildingFarmUnit = building.units
+  const numberOfUnits = farmBuildingFarmUnit.length
+
+  if (numberOfUnits < 1) {
     return res.status(StatusCodes.OK).json({
       status: 'success',
-      msg: `Farm building ${building.name} not have a units`,
+      msg: `Farm building ${building.buildingName} not have a units`,
     })
   }
 
   res.status(StatusCodes.OK).json({
     status: 'success',
-    farmBuilding: building.name,
-    health: FarmBuildingFarmUnit.health,
-    count: `Farm building ${building.name} has ${NumberOfUnits} units`,
+    farmBuilding: building.buildingName,
+    unitInfo: farmBuildingFarmUnit,
+    count: `Farm building ${building.buildingName} has ${numberOfUnits} units`,
   })
 }
 
