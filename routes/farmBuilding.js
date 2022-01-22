@@ -8,5 +8,5 @@ const {
 } = require('../controllers/farmBuilding')
 
 router.route('/').get(getAllBuildings).post(createBuilding)
-router.route('/:uuid/units').get(getFarmBuildingFarmUnit)
+router.route('/:slug/units').get(getFarmBuildingFarmUnit)
 module.exports = router

@@ -1,3 +1,5 @@
+const { SequelizeSlugify } = require('sequelize-slugify')
+
 module.exports = (sequelize, DataTypes) => {
   const FarmBuilding = sequelize.define('farm_buildings', {
     uuid: {
@@ -8,13 +10,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: 'Post must have a title' },
+        notNull: { msg: 'Farm building must have a name' },
         len: {
           args: [2, 100],
-          msg: 'Title must have 2 - 100 caracters.',
+          msg: 'Name must have 2 - 100 caracters.',
         },
       },
     },
+    slug: {
+      type: DataTypes.STRING,
+    },
+  })
+
+  SequelizeSlugify.slugifyModel(FarmBuilding, {
+    source: ['name'],
+    overwrite: false,
   })
 
   return FarmBuilding

@@ -25,8 +25,11 @@ const getAllUnits = async (req, res) => {
 const createUnit = async (req, res) => {
   const { farmBuildingId, name } = req.body
   const building = await FarmBuilding.findOne({ where: { id: farmBuildingId } })
+  if (!building)
+    throw new CustomApiError.NotFoundError(`Farm building not found`)
   const unit = await Unit.create({
     name,
+    health: Math.floor(Math.random() * (100 - 50 + 1) + 50),
     buildingId: building.id,
   })
 
@@ -36,4 +39,20 @@ const createUnit = async (req, res) => {
   })
 }
 
-module.exports = { createUnit, getAllUnits }
+// @desc      Add health to the farm unit
+// @route     POST /api/v1/unit/:id/health
+const addHealthToUnit = async (req, res) => {
+  const unit = await Unit.findOne({ where: { id: req.params.id } })
+  if (!unit) throw new CustomApiError.NotFoundError(`Unit not found`)
+  setInterval(async function () {
+    unit.health += 1
+    await unit.save()
+  }, 5000)
+
+  res.status(StatusCodes.CREATED).json({
+    status: 'success',
+    unit,
+  })
+}
+
+module.exports = { createUnit, getAllUnits, addHealthToUnit }
