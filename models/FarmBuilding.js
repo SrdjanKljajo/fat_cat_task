@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     slug: {
       type: DataTypes.STRING,
     },
+    feed: {
+      type: DataTypes.INTEGER,
+      defaultValue: 60,
+    },
   })
 
   SequelizeSlugify.slugifyModel(FarmBuilding, {

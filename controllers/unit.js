@@ -7,7 +7,7 @@ const FarmBuilding = db.farm_buildings
 const Unit = db.units
 
 // @desc      Get all units
-// @route     /api/v1/building
+// @route     /api/v1/unit
 const getAllUnits = async (req, res) => {
   const units = await Unit.findAll({
     include: 'farm_buildings',

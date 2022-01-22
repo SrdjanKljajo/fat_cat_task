@@ -24,6 +24,17 @@ const createBuilding = async (req, res) => {
   const { name } = req.body
   const building = await FarmBuilding.create({ name })
 
+  const farmFeedInterval = async () => {
+    if (building.feed > 0) {
+      building.feed -= 1
+      await building.save()
+    } else {
+      building.feed = 60
+    }
+  }
+
+  setInterval(farmFeedInterval, 1000)
+
   res.status(StatusCodes.CREATED).json({
     status: 'success',
     building,
@@ -57,4 +68,8 @@ const getFarmBuildingFarmUnit = async (req, res) => {
   })
 }
 
-module.exports = { getAllBuildings, createBuilding, getFarmBuildingFarmUnit }
+module.exports = {
+  getAllBuildings,
+  createBuilding,
+  getFarmBuildingFarmUnit,
+}
